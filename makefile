@@ -5,7 +5,9 @@ PKG_CONFIG = pkg-config
 SDL3_CFLAGS = $(shell $(PKG_CONFIG) --cflags sdl3)
 SDL3_LIBS   = $(shell $(PKG_CONFIG) --libs sdl3)
 
-CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude $(SDL3_CFLAGS)
+INC_DIRS = include external
+
+CXXFLAGS = -std=c++17 -Wall -Wextra $(addprefix -I,$(INC_DIRS)) $(SDL3_CFLAGS)
 
 SRC_DIR = src
 BUILD_DIR = build

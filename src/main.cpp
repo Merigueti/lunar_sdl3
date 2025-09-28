@@ -21,7 +21,6 @@ auto init(SDL_Window **window, SDL_Renderer **renderer) -> auto {
 int main(int /*argc*/, char* /*argv*/[]) {
   SDL_Window *window;
   SDL_Renderer *renderer;
-  int color = 0;
 
   if (init(&window, &renderer) == false) {
     return -1;

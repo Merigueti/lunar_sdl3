@@ -17,8 +17,8 @@ I plan to add small code updates on Sundays to keep the repository active.
 
 ## Roadmap
 
-* [ ] Development environment setup
-* [ ] First window rendering
+* [x] Development environment setup
+* [x] First window rendering
 * [ ] First object displayed on screen
 * [ ] Basic player movement
 * [ ] Collision system
@@ -49,8 +49,8 @@ Pretendo adicionar pequenos trechos de código aos domingos para manter o reposi
 
 ## Roadmap
 
-* [ ] Organização do ambiente de desenvolvimento
-* [ ] Renderização da primeira janela
+* [x] Organização do ambiente de desenvolvimento
+* [x] Renderização da primeira janela
 * [ ] Primeiro objeto exibido em tela
 * [ ] Movimentação básica do player
 * [ ] Sistema de colisão
