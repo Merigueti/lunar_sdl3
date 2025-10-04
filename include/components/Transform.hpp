@@ -2,6 +2,6 @@
 #pragma once
 
 struct Transform {
-    float x, y;
-    float w, h;
+    float x, y; // pixels
+    float w, h; // pixels
 };
