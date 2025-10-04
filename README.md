@@ -19,7 +19,7 @@ I plan to add small code updates on Sundays to keep the repository active.
 
 * [x] Development environment setup
 * [x] First window rendering
-* [ ] First object displayed on screen
+* [x] First object displayed on screen
 * [ ] Basic player movement
 * [ ] Collision system
 * [ ] Jump mechanics
@@ -51,7 +51,7 @@ Pretendo adicionar pequenos trechos de código aos domingos para manter o reposi
 
 * [x] Organização do ambiente de desenvolvimento
 * [x] Renderização da primeira janela
-* [ ] Primeiro objeto exibido em tela
+* [x] Primeiro objeto exibido em tela
 * [ ] Movimentação básica do player
 * [ ] Sistema de colisão
 * [ ] Mecânica de pulo
