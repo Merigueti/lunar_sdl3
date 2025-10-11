@@ -1,6 +1,6 @@
 #pragma once
 
 struct Acceleration {
-    float ax; //m/s²
-    float ay;
+    float x; //m/s²
+    float y;
 };

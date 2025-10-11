@@ -2,23 +2,44 @@
 #include "components/Acceleration.hpp"
 #include "components/Transform.hpp"
 #include "components/Velocity.hpp"
+#include "components/Friction.hpp"
 #include "SDL3/SDL.h"
 
 constexpr float PIXELS_PER_METER = 32.0f;
 
 void PhysicsSystem::update(entt::registry &registry, float deltaTime)
 {
-    auto view = registry.view<Transform, Velocity, Acceleration>();
+    auto view = registry.view<Transform, Velocity, Acceleration, Friction>();
+
     for (auto entity : view)
     {
-        auto &t = view.get<Transform>(entity);
-        auto &v = view.get<Velocity>(entity);
-        auto &a = view.get<Acceleration>(entity);
+        auto &vel = view.get<Velocity>(entity);
+        auto &accel = view.get<Acceleration>(entity);
+        auto &fric = view.get<Friction>(entity);
 
-        v.dx += a.ax * deltaTime;
-        v.dy += a.ay * deltaTime;
+        // Integração: v = v0 + a * dt
+        vel.x += accel.x * deltaTime * PIXELS_PER_METER;
+        vel.y += accel.y * deltaTime * PIXELS_PER_METER;
 
-        t.x += static_cast<int>(v.dx * deltaTime * PIXELS_PER_METER);
-        t.y += static_cast<int>(v.dy * deltaTime * PIXELS_PER_METER);
+        // LIMITE DE VELOCIDADE MÁXIMA (evita velocidades infinitas)
+        const float MAX_SPEED = 100.0f; // Ajuste conforme necessário
+        float currentSpeed = sqrt(vel.x * vel.x + vel.y * vel.y);
+        if (currentSpeed > MAX_SPEED)
+        {
+            vel.x = (vel.x / currentSpeed) * MAX_SPEED;
+            vel.y = (vel.y / currentSpeed) * MAX_SPEED;
+        }
+
+        // Aplica atrito/suavização (reduz velocidade gradualmente)
+        vel.x *= fric.value;           
+        vel.y *= fric.value;
+        if (fabs(vel.x) < 0.1f)
+            vel.x = 0.0f;
+        if (fabs(vel.y) < 0.1f)
+            vel.y = 0.0f;
+
+        auto &transform = view.get<Transform>(entity);
+        transform.x += vel.x * deltaTime;
+        transform.y += vel.y * deltaTime;
     }
 }

@@ -1,6 +1,6 @@
 #pragma once
 
 struct Force {
-    float fx; // Newtons (kg·m/s²)
-    float fy;
+    float x; // Newtons (kg·m/s²)
+    float y;
 };

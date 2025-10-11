@@ -2,6 +2,7 @@
 #include "components/Force.hpp"
 #include "components/Acceleration.hpp"
 #include "components/Mass.hpp"
+#include <SDL3/SDL.h>
 
 
 void ForceSystem::update(entt::registry& registry) {
@@ -10,11 +11,11 @@ void ForceSystem::update(entt::registry& registry) {
         auto &force = view.get<Force>(entity);
         auto &acc = view.get<Acceleration>(entity);
         auto &mass = view.get<Mass>(entity);
+        
+        acc.x = force.x / mass.value;
+        acc.y = force.y / mass.value;
 
-        acc.ax = force.fx / mass.value;
-        acc.ay = force.fy / mass.value;
-
-        // force.fx = 0;
-        // force.fy = 0;
+        // force.x = 0;
+        // force.y = 0;
     }
 }
