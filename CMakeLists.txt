@@ -12,6 +12,7 @@ set(SYS_INC_DIRS external)
 
 # Diretório de código-fonte
 set(SRC_DIR src)
+set(CORE_DIR core)
 set(BUILD_DIR ${CMAKE_BINARY_DIR}/build)
 
 # Encontra SDL3 usando pkg-config
@@ -30,6 +31,7 @@ target_include_directories(${PROJECT_NAME}
         ${INC_DIRS}
         ${SYS_INC_DIRS}
         ${SDL3_INCLUDE_DIRS}
+        ${CORE_DIR}
 )
 
 # Adiciona o diretório do entt.hpp

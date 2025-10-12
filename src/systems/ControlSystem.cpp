@@ -5,6 +5,7 @@
 #include "components/Transform.hpp"
 #include "components/Velocity.hpp"
 #include "components/Friction.hpp"
+#include <cmath>
 
 void ControlSystem::update(entt::registry &registry)
 {
@@ -21,27 +22,25 @@ void ControlSystem::update(entt::registry &registry)
         force.y = 0.0f;
         fric.value = 0.9f;
 
-        // Aplica forças baseadas no input (valores ajustáveis)
-        const float MOVEMENT_FORCE = 50.0f; // Ajuste conforme necessário
+        const float MOVEMENT_FORCE = 50.0f;
 
-        if (input.up)
+        float dirX = 0.0f;
+        float dirY = 0.0f;
+
+        if (input.up)    dirY -= 1.0f;
+        if (input.down)  dirY += 1.0f;
+        if (input.left)  dirX -= 1.0f;
+        if (input.right) dirX += 1.0f;
+
+        float magnitude = std::sqrt(dirX * dirX + dirY * dirY);
+        if (magnitude > 0.0f)
         {
-            force.y -= MOVEMENT_FORCE * mass.value;
-            fric.value = 1.0f;
-        }
-        if (input.down)
-        {
-            force.y += MOVEMENT_FORCE * mass.value;
-            fric.value = 1.0f;
-        }
-        if (input.left)
-        {
-            force.x -= MOVEMENT_FORCE * mass.value;
-            fric.value = 1.0f;
-        }
-        if (input.right)
-        {
-            force.x += MOVEMENT_FORCE * mass.value;
+            dirX /= magnitude;
+            dirY /= magnitude;
+
+            force.x = dirX * MOVEMENT_FORCE * mass.value;
+            force.y = dirY * MOVEMENT_FORCE * mass.value;
+
             fric.value = 1.0f;
         }
     }
