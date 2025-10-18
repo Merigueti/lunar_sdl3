@@ -5,12 +5,12 @@
 #include <string>
 #include "AnimationData.hpp"
 
-struct AnimationSet
-{
+struct AnimationSet {
     std::unordered_map<std::string, AnimationData> animations;
-    std::string current = ""; // nome da animação atual
-    int currentFrame = 0;     // frame atual
-    float accumulator = 0.0f; // tempo acumulado para troca de frame
+    std::string current = "";
+    int currentFrameX = 0;
+    int currentFrameY = 0;
+    float accumulator = 0.0f;
     bool playing = true;
 };
 

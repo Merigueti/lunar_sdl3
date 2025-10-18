@@ -13,24 +13,35 @@ void AnimationSystem::update(entt::registry& registry, float deltaTime) {
         if (it == animSet.animations.end()) continue;
 
         const AnimationData &anim = it->second;
-
         animSet.accumulator += deltaTime;
-        
+
         if (animSet.accumulator >= anim.frameTime) {
             animSet.accumulator -= anim.frameTime;
-            animSet.currentFrame++;
-            
-            if (animSet.currentFrame > anim.endFrame) {
+
+            // Avança um frame na horizontal
+            animSet.currentFrameX++;
+
+            // Se passou do fim da linha, avança para a próxima
+            if (animSet.currentFrameX > anim.endFrameX) {
+                animSet.currentFrameX = anim.startFrameX;
+                animSet.currentFrameY++;
+            }
+
+            // Se passou do fim da animação (última linha)
+            if (animSet.currentFrameY > anim.endFrameY) {
                 if (anim.loop) {
-                    animSet.currentFrame = anim.startFrame;
+                    animSet.currentFrameX = anim.startFrameX;
+                    animSet.currentFrameY = anim.startFrameY;
                 } else {
-                    animSet.currentFrame = anim.endFrame;
+                    animSet.currentFrameX = anim.endFrameX;
+                    animSet.currentFrameY = anim.endFrameY;
                     animSet.playing = false;
                 }
             }
 
-            // Sincroniza com o componente Sprite
-            sprite.currentFrame = animSet.currentFrame;
+            // Atualiza sprite
+            sprite.frameX = animSet.currentFrameX;
+            sprite.frameY = animSet.currentFrameY;
         }
     }
 }
@@ -38,18 +49,21 @@ void AnimationSystem::update(entt::registry& registry, float deltaTime) {
 void AnimationSystem::setAnimation(entt::registry& registry, entt::entity entity, const std::string& animationName) {
     if (auto* animSet = registry.try_get<AnimationSet>(entity)) {
         if (animSet->current == animationName) return;
-        
+
         auto it = animSet->animations.find(animationName);
         if (it == animSet->animations.end()) return;
 
+        const AnimationData& anim = it->second;
         animSet->current = animationName;
-        animSet->currentFrame = it->second.startFrame;
+        animSet->currentFrameX = anim.startFrameX;
+        animSet->currentFrameY = anim.startFrameY;
         animSet->accumulator = 0.0f;
         animSet->playing = true;
 
         // Atualiza sprite imediatamente
         if (auto* sprite = registry.try_get<Sprite>(entity)) {
-            sprite->currentFrame = animSet->currentFrame;
+            sprite->frameX = animSet->currentFrameX;
+            sprite->frameY = animSet->currentFrameY;
         }
     }
 }

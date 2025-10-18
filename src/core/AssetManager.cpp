@@ -18,13 +18,14 @@ bool AssetManager::loadTexture(SDL_Renderer* renderer, const std::string& id, co
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    
     SDL_DestroySurface(surface);
     
     if (!texture) {
         std::cerr << "Failed to create texture from " << path << " : " << SDL_GetError() << std::endl;
         return false;
     }
-
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     textures_[id] = texture;
     return true;
 }

@@ -4,8 +4,10 @@
 #include <string>
 
 struct AnimationData {
-    int startFrame = 0;
-    int endFrame = 0;
+    int startFrameX = 0;
+    int startFrameY = 0;
+    int endFrameX = 0;
+    int endFrameY = 0;
     float frameTime = 0.1f; // segundos por frame
     bool loop = true;
 };

@@ -37,7 +37,7 @@ public:
     void run();
 
 private:
-    void createEntities();
+    void createEntities(int x, int y);
     void processFrame(double deltaTime);
     void capFrameRate(Uint64 frameStart);
     void setupPlayerAnimations(entt::entity player);

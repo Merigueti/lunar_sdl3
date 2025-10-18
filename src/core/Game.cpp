@@ -38,36 +38,38 @@ bool Game::init() {
 
     registry_.ctx().emplace<InputState>();
     registry_.ctx().emplace<bool>(false);  // quit flag
-    createEntities();
+    createEntities(0, 0);
 
     SDL_Log("START - GAME");
     running_ = true;
     return true;
 };
 
-void Game::createEntities() {
-    auto square = registry_.create();
-    registry_.emplace<Transform>(square, (256 / 2 - 8), 0, 16.0, 32.0);
-    registry_.emplace<Color>(square, 255, 255, 255, 255);
-    registry_.emplace<Renderable>(square);
-    registry_.emplace<Velocity>(square, 0.0f, 0.0f);
-    registry_.emplace<Acceleration>(square, 0.0f, 0.0f);
-    registry_.emplace<Force>(square, 0.0, 0.0);
-    registry_.emplace<Mass>(square, 1.0f);
-    registry_.emplace<Friction>(square, 0.0f);
+void Game::createEntities(int x, int y) {
+    auto player = registry_.create();
+    registry_.emplace<Transform>(player, x, y, 16.0*4, 32.0*4);
+    registry_.emplace<Color>(player, 255, 255, 255, 255);
+    registry_.emplace<Renderable>(player);
+    registry_.emplace<Velocity>(player, 0.0f, 0.0f);
+    registry_.emplace<Acceleration>(player, 0.0f, 0.0f);
+    registry_.emplace<Force>(player, 0.0, 0.0);
+    registry_.emplace<Mass>(player, 1.0f);
+    registry_.emplace<Friction>(player, 0.0f);
 
     Sprite sprite;
     sprite.textureId = "hero";
     sprite.frameWidth = 16;
     sprite.frameHeight = 32;
-    registry_.emplace<Sprite>(square, sprite);
-    setupPlayerAnimations(square);
+    sprite.columns = 4;
+    sprite.rows = 5;
+    registry_.emplace<Sprite>(player, sprite);
+    setupPlayerAnimations(player);
 
 }
 
 void Game::setupPlayerAnimations(entt::entity player) {
     auto& animSet = registry_.emplace<AnimationSet>(player);
-    animSet.animations["idle"] = AnimationData{0, 3, 0.2f, true};
+    animSet.animations["idle"] = AnimationData{0, 0, 3, 4, 0.2f, true};
 }
 
 void Game::run() {
@@ -101,10 +103,8 @@ void Game::processFrame(double deltaTime) {
     forceSystem_.update(registry_);
     physicsSystem_.update(registry_, static_cast<float>(deltaTime));
 
-    auto view = registry_.view<Velocity, AnimationSet>();
+    auto view = registry_.view<AnimationSet>();
     for (auto entity : view) {
-        const auto& velocity = view.get<Velocity>(entity);
-        auto& animSet = view.get<AnimationSet>(entity);
         AnimationSystem::setAnimation(registry_, entity, "idle");
     }
 
