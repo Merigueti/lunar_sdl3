@@ -1,10 +1,11 @@
 #pragma once
 
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include "SDL3/SDL.h"
 
 // Core
 #include "core/AssetManager.hpp"
+#include "core/TilemapLoader.hpp"
 
 // Components
 #include "components/Acceleration.hpp"
@@ -19,6 +20,8 @@
 #include "components/Sprite.hpp"
 #include "components/Transform.hpp"
 #include "components/Velocity.hpp"
+#include "components/Tilemap.hpp"
+#include "components/TileLayer.hpp"
 
 // Systems
 #include "systems/ControlSystem.hpp"
@@ -27,6 +30,8 @@
 #include "systems/PhysicsSystem.hpp"
 #include "systems/RenderSystem.hpp"
 #include "systems/AnimationSystem.hpp"
+#include "systems/TilemapSystem.hpp"
+
 
 class Game {
 public:
@@ -41,10 +46,13 @@ private:
     void processFrame(double deltaTime);
     void capFrameRate(Uint64 frameStart);
     void setupPlayerAnimations(entt::entity player);
+    void createTilemap();
 
     SDL_Window* window_;
     SDL_Renderer* renderer_;
     entt::registry registry_;
+    TilemapSystem m_tilemapSystem;
+    entt::entity m_tilemapEntity;
     AssetManager assetManager_;
 
     RenderSystem renderSystem_;

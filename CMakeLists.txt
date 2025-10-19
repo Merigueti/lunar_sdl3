@@ -34,11 +34,16 @@ target_include_directories(${PROJECT_NAME}
         ${CORE_DIR}
 )
 
-# Adiciona o diretório do entt.hpp
-target_include_directories(${PROJECT_NAME}
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/external
-)
+# Inclui todos os diretórios dentro de "external"
+file(GLOB_RECURSE EXTERNAL_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external/*")
+foreach(DIR ${EXTERNAL_DIRS})
+    if(IS_DIRECTORY ${DIR})
+        target_include_directories(${PROJECT_NAME}
+            PRIVATE
+                ${DIR}
+        )
+    endif()
+endforeach()
 
 # Flags de compilação adicionais
 target_compile_options(${PROJECT_NAME}

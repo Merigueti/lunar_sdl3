@@ -6,6 +6,7 @@ Game::Game()
     : window_(nullptr),
       renderer_(nullptr),
       renderSystem_(nullptr, nullptr),  // será configurado após init
+      m_tilemapSystem(nullptr, nullptr),  // initialize directly
       running_(false) {}
 
 Game::~Game() {
@@ -13,7 +14,6 @@ Game::~Game() {
     SDL_DestroyWindow(window_);
     SDL_Quit();
 }
-
 bool Game::init() {
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
@@ -28,26 +28,31 @@ bool Game::init() {
         return false;
     }
 
-    if (!assetManager_.loadTexture(renderer_, "hero", "assets/16x32_Idle.bmp")) {
+    if (!assetManager_.loadTexture(renderer_, "hero", "/home/merigueti/Documents/projetos/cpp/SDL3/lunar_sdl3/assets/16x32_Idle.bmp")) {
         SDL_Log("Não foi possível carregar 16x32_Idle.bmp, usando fallback");
     }
 
-    // Reconfigurar render system com asset manager
-    
+    if (!assetManager_.loadTexture(renderer_, "tileset_grass", "/home/merigueti/Documents/projetos/cpp/SDL3/lunar_sdl3/assets/Tiles/Assets/Assets.bmp")) {
+        SDL_Log("Não foi possível carregar Assets.bmp, usando fallback");
+    }
+
     renderSystem_ = RenderSystem(renderer_, &assetManager_);
+    // m_tilemapSystem is already initialized in the constructor
+    m_tilemapSystem = TilemapSystem(renderer_, &assetManager_);
 
     registry_.ctx().emplace<InputState>();
     registry_.ctx().emplace<bool>(false);  // quit flag
     createEntities(0, 0);
+    createTilemap();
 
     SDL_Log("START - GAME");
     running_ = true;
     return true;
-};
+}
 
 void Game::createEntities(int x, int y) {
     auto player = registry_.create();
-    registry_.emplace<Transform>(player, x, y, 16.0*4, 32.0*4);
+    registry_.emplace<Transform>(player, x, y, 16.0, 32.0);
     registry_.emplace<Color>(player, 255, 255, 255, 255);
     registry_.emplace<Renderable>(player);
     registry_.emplace<Velocity>(player, 0.0f, 0.0f);
@@ -70,6 +75,14 @@ void Game::createEntities(int x, int y) {
 void Game::setupPlayerAnimations(entt::entity player) {
     auto& animSet = registry_.emplace<AnimationSet>(player);
     animSet.animations["idle"] = AnimationData{0, 0, 3, 4, 0.2f, true};
+}
+
+void Game::createTilemap() {
+    TilemapLoader loader(registry_, assetManager_);
+    m_tilemapEntity = loader.loadFromFile(
+        "/home/merigueti/Documents/projetos/cpp/SDL3/lunar_sdl3/assets/maps/TESTEMAP.tmj",  // JSON map file, not BMP
+        "tileset_grass"               // tileset texture loaded in AssetManager
+    );
 }
 
 void Game::run() {
@@ -102,6 +115,7 @@ void Game::processFrame(double deltaTime) {
 
     forceSystem_.update(registry_);
     physicsSystem_.update(registry_, static_cast<float>(deltaTime));
+    m_tilemapSystem.render(registry_);
 
     auto view = registry_.view<AnimationSet>();
     for (auto entity : view) {

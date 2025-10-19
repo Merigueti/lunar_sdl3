@@ -1,5 +1,5 @@
 #pragma once
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include "SDL3/SDL.h"
 #include "components/InputState.hpp"
 

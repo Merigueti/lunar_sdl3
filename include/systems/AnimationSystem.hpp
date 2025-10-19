@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include "SDL3/SDL.h"
 #include "components/AnimationData.hpp"
 #include "components/AnimationSet.hpp"
