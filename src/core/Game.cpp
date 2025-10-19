@@ -42,7 +42,7 @@ bool Game::init() {
 
     registry_.ctx().emplace<InputState>();
     registry_.ctx().emplace<bool>(false);  // quit flag
-    createEntities(0, 0);
+    createEntities(256/2, 224/2);
     createTilemap();
 
     SDL_Log("START - GAME");
@@ -52,7 +52,8 @@ bool Game::init() {
 
 void Game::createEntities(int x, int y) {
     auto player = registry_.create();
-    registry_.emplace<Transform>(player, x, y, 16.0, 32.0);
+    registry_.emplace<Transform>(player, x, y, x, y, 16.0, 32.0);
+    registry_.emplace<Collider>(player, 14.0, 30.0, 1, false, false);
     registry_.emplace<Color>(player, 255, 255, 255, 255);
     registry_.emplace<Renderable>(player);
     registry_.emplace<Velocity>(player, 0.0f, 0.0f);
@@ -80,8 +81,8 @@ void Game::setupPlayerAnimations(entt::entity player) {
 void Game::createTilemap() {
     TilemapLoader loader(registry_, assetManager_);
     m_tilemapEntity = loader.loadFromFile(
-        "/home/merigueti/Documents/projetos/cpp/SDL3/lunar_sdl3/assets/maps/TESTEMAP.tmj",  // JSON map file, not BMP
-        "tileset_grass"               // tileset texture loaded in AssetManager
+        "/home/merigueti/Documents/projetos/cpp/SDL3/lunar_sdl3/assets/maps/TESTEMAP.tmj",  // JSON map file
+        "tileset_grass"
     );
 }
 
@@ -116,6 +117,7 @@ void Game::processFrame(double deltaTime) {
     forceSystem_.update(registry_);
     physicsSystem_.update(registry_, static_cast<float>(deltaTime));
     m_tilemapSystem.render(registry_);
+    tileCollisionSystem.update(registry_);
 
     auto view = registry_.view<AnimationSet>();
     for (auto entity : view) {

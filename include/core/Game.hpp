@@ -22,6 +22,7 @@
 #include "components/Velocity.hpp"
 #include "components/Tilemap.hpp"
 #include "components/TileLayer.hpp"
+#include "components/Collider.hpp"
 
 // Systems
 #include "systems/ControlSystem.hpp"
@@ -31,6 +32,7 @@
 #include "systems/RenderSystem.hpp"
 #include "systems/AnimationSystem.hpp"
 #include "systems/TilemapSystem.hpp"
+#include "systems/TileCollisionSystem.hpp"
 
 
 class Game {
@@ -61,6 +63,7 @@ private:
     ControlSystem controlSystem_;
     InputSystem inputSystem_;
     AnimationSystem animationSystem_;
+    TileCollisionSystem tileCollisionSystem;
 
     bool running_;
 

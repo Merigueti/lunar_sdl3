@@ -38,6 +38,8 @@ void PhysicsSystem::update(entt::registry &registry, float deltaTime)
             vel.y = 0.0f;
 
         auto &transform = view.get<Transform>(entity);
+        transform.previousX = transform.x;
+        transform.previousY = transform.y;
         transform.x += vel.x * deltaTime;
         transform.y += vel.y * deltaTime;
     }
