@@ -3,7 +3,6 @@
 #include "components/Transform.hpp"
 #include "components/Velocity.hpp"
 #include "components/Friction.hpp"
-#include "SDL3/SDL.h"
 
 constexpr float PIXELS_PER_METER = 32.0f;
 
@@ -22,7 +21,7 @@ void PhysicsSystem::update(entt::registry &registry, float deltaTime)
         vel.y += accel.y * deltaTime * PIXELS_PER_METER;
 
         // LIMITE DE VELOCIDADE MÁXIMA (evita velocidades infinitas)
-        const float MAX_SPEED = 100.0f; // Ajuste conforme necessário
+        const float MAX_SPEED = 500.0f; // Ajuste conforme necessário
         float currentSpeed = sqrt(vel.x * vel.x + vel.y * vel.y);
         if (currentSpeed > MAX_SPEED)
         {

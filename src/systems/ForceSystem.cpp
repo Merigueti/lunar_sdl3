@@ -2,7 +2,6 @@
 #include "components/Force.hpp"
 #include "components/Acceleration.hpp"
 #include "components/Mass.hpp"
-#include <SDL3/SDL.h>
 
 
 void ForceSystem::update(entt::registry& registry) {
@@ -15,7 +14,5 @@ void ForceSystem::update(entt::registry& registry) {
         acc.x = force.x / mass.value;
         acc.y = force.y / mass.value;
 
-        // force.x = 0;
-        // force.y = 0;
     }
 }
