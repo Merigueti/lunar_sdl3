@@ -20,10 +20,12 @@ I plan to add small code updates on Sundays to keep the repository active.
 * [x] Development environment setup
 * [x] First window rendering
 * [x] First object displayed on screen
+* [x] Sprite rendering
+* [x] Basic physics system with inertia and friction
+* [x] Tilemap loading system
 * [ ] Basic player movement
 * [ ] Collision system
 * [ ] Jump mechanics
-* [ ] Sprite rendering
 
 ---
 
@@ -31,7 +33,6 @@ I plan to add small code updates on Sundays to keep the repository active.
 
 * **C++20**
 * **EnTT (Entity Component System)**
-* **[Insert rendering/graphics library you’ll use, e.g., SDL2, SFML, OpenGL]**
 
 ---
 
@@ -44,20 +45,6 @@ O objetivo é analisar e reproduzir aspectos da física do *Super Mario World*, 
 
 Pretendo adicionar pequenos trechos de código aos domingos para manter o repositório ativo.
 ⚠️ **Nota:** Este não é um projeto de jogo completo ou voltado para produção.
-
----
-
-## Roadmap
-
-* [x] Organização do ambiente de desenvolvimento
-* [x] Renderização da primeira janela
-* [x] Primeiro objeto exibido em tela
-* [ ] Movimentação básica do player
-* [ ] Sistema de colisão
-* [ ] Mecânica de pulo
-* [ ] Exibição de sprites
-
----
 
 ## Tecnologias
 
