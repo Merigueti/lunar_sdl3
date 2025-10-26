@@ -53,7 +53,7 @@ bool Game::init() {
 void Game::createEntities(int x, int y) {
     auto player = registry_.create();
     registry_.emplace<Transform>(player, x, y, x, y, 16.0, 32.0);
-    registry_.emplace<Collider>(player, 14.0, 30.0, 1, false, false);
+    registry_.emplace<Collider>(player, 0, 8, 14.0, 32-8.0, 1);
     registry_.emplace<Color>(player, 255, 255, 255, 255);
     registry_.emplace<Renderable>(player);
     registry_.emplace<Velocity>(player, 0.0f, 0.0f);
@@ -124,10 +124,8 @@ void Game::processFrame(double deltaTime) {
         AnimationSystem::setAnimation(registry_, entity, "idle");
     }
 
-
     animationSystem_.update(registry_, deltaTime);
     renderSystem_.update(registry_);
-
     SDL_RenderPresent(renderer_);
 }
 

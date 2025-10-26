@@ -40,41 +40,79 @@ void TileCollisionSystem::update(entt::registry& registry) {
         float newX = transform.x;
         float newY = transform.y;
 
+        collider.trigger_left_to_right = false;
+        collider.trigger_right_to_left = false;
+        collider.trigger_up_to_down = false;
+        collider.trigger_down_to_up = false;
+
+        // Calcular as coordenadas da caixa de colisão considerando o offset
+        float colliderLeft = newX + collider.x;
+        float colliderTop = newY + collider.y;
+        float colliderRight = colliderLeft + collider.w;
+        float colliderBottom = colliderTop + collider.h;
+
+        float oldColliderLeft = oldX + collider.x;
+        float oldColliderTop = oldY + collider.y;
+        float oldColliderRight = oldColliderLeft + collider.w;
+        float oldColliderBottom = oldColliderTop + collider.h;
+
         // -------- Eixo X --------
         {
-            float left   = newX;
-            float right  = newX + collider.w;
-            float top    = oldY;
-            float bottom = oldY + collider.h;
+            float left   = colliderLeft;
+            float right  = colliderRight;
+            float top    = oldColliderTop;    // Usar Y antigo para verificação X
+            float bottom = oldColliderBottom; // Usar Y antigo para verificação X
 
             if (checkCollision(map, left, top, right, bottom)) {
                 if (newX > oldX) {
-                    newX = (static_cast<int>(right) / map.tileWidth) * map.tileWidth - collider.w - 0.1f;
+                    collider.trigger_left_to_right = true;
+                    if(collider.solid) {
+                        // Corrigir a posição X baseado na colisão
+                        float collisionRight = (static_cast<int>(right) / map.tileWidth) * map.tileWidth;
+                        newX = collisionRight - collider.w - collider.x - 0.1f;
+                    }
                 } else {
-                    newX = (static_cast<int>(left) / map.tileWidth + 1) * map.tileWidth + 0.1f;
+                    collider.trigger_right_to_left = true;
+                    if(collider.solid) {
+                        // Corrigir a posição X baseado na colisão
+                        float collisionLeft = (static_cast<int>(left) / map.tileWidth + 1) * map.tileWidth;
+                        newX = collisionLeft - collider.x + 0.1f;
+                    }
                 }
             }
         }
 
         // -------- Eixo Y --------
         {
-            float left   = newX;
-            float right  = newX + collider.w;
-            float top    = newY;
-            float bottom = newY + collider.h;
+            // Atualizar coordenadas da caixa de colisão com o X corrigido
+            colliderLeft = newX + collider.x;
+            colliderTop = newY + collider.y;
+            colliderRight = colliderLeft + collider.w;
+            colliderBottom = colliderTop + collider.h;
+
+            float left   = colliderLeft;
+            float right  = colliderRight;
+            float top    = colliderTop;
+            float bottom = colliderBottom;
 
             if (checkCollision(map, left, top, right, bottom)) {
                 // Corrige Y: volta até não colidir
                 if (newY > oldY) {
-                    // movendo para baixo
-                    newY = (static_cast<int>(bottom) / map.tileHeight) * map.tileHeight - collider.h - 0.1f;
+                    collider.trigger_up_to_down = true;
+                    if(collider.solid) {
+                        float collisionBottom = (static_cast<int>(bottom) / map.tileHeight) * map.tileHeight;
+                        newY = collisionBottom - collider.h - collider.y - 0.1f;
+                    }
                 } else {
-                    // movendo para cima
-                    newY = (static_cast<int>(top) / map.tileHeight + 1) * map.tileHeight + 0.1f;
+                    collider.trigger_down_to_up = true;
+                    if(collider.solid) {
+                        float collisionTop = (static_cast<int>(top) / map.tileHeight + 1) * map.tileHeight;
+                        newY = collisionTop - collider.y + 0.1f;
+                    }
                 }
             }
         }
-
+        
         transform.x = newX;
         transform.y = newY;
     }
